@@ -49,22 +49,34 @@
 
 Пусть `FP, TP` - действительные значения, а `fp, tp` - оценки, полученные программой.
 Пусть аналогично `VR` - действительное значение, а `vr` - параметр, поданный программе на вход.
+Пусть $\star$ - событие: прибор вывел введенные параметры.
 
 Утверждения:
 
-1. $FP = P(VR < mvr), FP = P(VR \ge mvr)$
-2. $FP = \sum_{VR = 0}^{mvr - 1}\sum_{l=0}^{VR}{Q(cov, VR) \cdot P(Bi(VR, err) = l) \cdot P(Bi(cov - VR, err^\star) = vr - k + l}$
+1. $FP = P(\ \star \mid VR < mvr),\quad TP = P(\ \star \mid VR \ge mvr)$
+2. $FP + TP = 1$
+
+$$
+FP = \frac{P(\ \star\ \cap\ VR < mvr)}{P(VR < mvr)} =
+\frac{\sum_{k=0}^{mvr - 1}{P(\ \star\ \cap\ VR = k)}}{\sum_{k=0}^{mvr - 1}{P(VR = k)}} \le
+\sum_{k=0}^{mvr - 1}\frac{P(\ \star\ \cap\ VR = k)}{P(VR = k)} =
+\sum_{k=0}^{mvr - 1}{P(\ \star \mid VR = k)}
+$$
+
+$$
+P(\ \star \mid VR = k) = \sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)}
+$$
 
 $err$ - веростность ошибки: $G \to \{A, C, T\}$
 $err^\star$ - веростность ошибки: $\{A, C, T\} \to G$
-Если все ошибки равновероятны: $err^\star = err / 3$
-$Q(cov, VR)$ - вероятность того, что в действительности вариантных прочтений из $cov$ будет $VR$.
-Эта вероятность нам не известна, поэтому оценим ее $1$.
+Если все ошибки равновероятны ($\exists err^* \in \mathbb{R}: \forall i \in \{A, G, C, T\},\ \forall j \neq i \hookrightarrow err^\star = P(i \to j)$): $err^\star = err / 3$
 
-$FP \le \sum_{VR = 0}^{mvr - 1}\sum_{l=0}^{VR}{P(Bi(VR, err) = l) \cdot P(Bi(cov - VR, err^\star) = vr - k + l} = fp$
+$$
+\newcommand{\defeq}{\stackrel{def}{=}}
+FP \le \sum_{k=0}^{mvr - 1}\sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)} \defeq fp
+$$
 
-$tp = 1 - fp$
+$tp \defeq 1 - fp$
 $FP \le fp \implies -FP \ge -fp \implies 1 - FP \ge 1 - fp \implies TP \ge tp$
 
 Получили желаемое: верхнюю оценку на $FP$ и нижнюю оценку на $TP$.
-
