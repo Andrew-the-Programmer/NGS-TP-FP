@@ -67,16 +67,17 @@ $$
 P(\ \star \mid VR = k) = \sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)}
 $$
 
-$err$ - веростность ошибки: $G \to \{A, C, T\}$
-$err^\star$ - веростность ошибки: $\{A, C, T\} \to G$
-Если все ошибки равновероятны ($\exists err^* \in \mathbb{R}: \forall i \in \{A, G, C, T\},\ \forall j \neq i \hookrightarrow err^\star = P(i \to j)$): $err^\star = err / 3$
+$err$ - веростность ошибки: $G \to \\{A, C, T\\}$\
+$err^\star$ - веростность ошибки: $\\{A, C, T\\} \to G$\
+Если все ошибки равновероятны
+$\left(\exists err^\star \in \mathbb{R}: \forall i \in \\{A, G, C, T\\},\ \forall j \neq i \hookrightarrow err^\star = P(i \to j)\right)$,
+тогда $err^\star = err / 3$
 
 $$
-\newcommand{\defeq}{\stackrel{def}{=}}
-FP \le \sum_{k=0}^{mvr - 1}\sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)} \defeq fp
+FP \le \sum_{k=0}^{mvr - 1}\sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)} \stackrel{def}{=} fp
 $$
 
-$tp \defeq 1 - fp$
+$tp \stackrel{def}{=} 1 - fp$\
 $FP \le fp \implies -FP \ge -fp \implies 1 - FP \ge 1 - fp \implies TP \ge tp$
 
 Получили желаемое: верхнюю оценку на $FP$ и нижнюю оценку на $TP$.
