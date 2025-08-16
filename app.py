@@ -28,10 +28,10 @@ class Window(Frame):
                 Keys.FP,
                 lambda v: f"Probability of false positive: {format_percent(v)}",
             ),
-            (
-                Keys.TP,
-                lambda v: f"Probability of true positive: {format_percent(v)}",
-            ),
+            # (
+            #     Keys.TP,
+            #     lambda v: f"Probability of true positive: {format_percent(v)}",
+            # ),
         )
 
         self.entries: dict[str, tk.Entry] = {}

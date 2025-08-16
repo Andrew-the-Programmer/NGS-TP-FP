@@ -47,24 +47,44 @@
 Данная программа не дает точный результат ошибок, а пытается их достаточно хорошо оценить.
 Количество ошибок - случайная величина, имеющая биномальное распределение `Bi(n, p)`.
 
-Пусть `FP, TP` - действительные значения, а `fp, tp` - оценки, полученные программой.
+Пусть `FP, TP` - действительные значения, а `fp, tp` - оценки, полученные программой. \
 Пусть аналогично `VR` - действительное значение, а `vr` - параметр, поданный программе на вход.
-Пусть $\star$ - событие: прибор вывел введенные параметры.
+`VR` и `vr` - случайные величины. \
+Пусть прибор показал, что кол-во вариантных прочтений равно $vr^\star$. \
+Пусть $\star$ - событие: прибор вывел введенные параметры, т.е. $vr = vr^\star$.
 
-Утверждения:
-
-1. $FP = P(\ \star \mid VR < mvr),\quad TP = P(\ \star \mid VR \ge mvr)$
-2. $FP + TP = 1$
-
-$$
-FP = \frac{P(\ \star\ \cap\ VR < mvr)}{P(VR < mvr)} =
-\frac{\sum_{k=0}^{mvr - 1}{P(\ \star\ \cap\ VR = k)}}{\sum_{k=0}^{mvr - 1}{P(VR = k)}} \le
-\sum_{k=0}^{mvr - 1}\frac{P(\ \star\ \cap\ VR = k)}{P(VR = k)} =
-\sum_{k=0}^{mvr - 1}{P(\ \star \mid VR = k)}
-$$
+Небольшое утверждение про вероятность:
 
 $$
-P(\ \star \mid VR = k) = \sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)}
+P(A \mid \bigsqcup{B_i}) \le \sum{P(A \mid B_i)}
+$$
+
+Доказательство:
+
+$$
+P(A \mid \bigsqcup{B_i}) =
+\frac{P(A \cap \bigsqcup{B_i})}{P(\bigsqcup{B_i})} =
+\frac{\sum P(A \cap B_i)}{\sum P(B_i)} \le
+\sum \frac{P(A \cap B_i)}{P(B_i)} =
+\sum P(A \mid B_i)
+$$
+
+Утверждение для нашей задачи:
+
+$$
+FP = P(\star \mid VR < mvr),\quad TP = P(\star \mid VR \ge mvr)
+$$
+
+## Оценка сверху на $FP$
+
+$$
+FP = P(\star \mid VR < mvr) =
+P(\star \mid \bigsqcup_{k=0}^{mvr - 1}{VR = k}) \le
+\sum_{k=0}^{mvr - 1}{P(\star \mid VR = k)}
+$$
+
+$$
+P(\star \mid VR = k) = \sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)}
 $$
 
 $err$ - веростность ошибки: $G \to \\{A, C, T\\}$\
@@ -77,7 +97,33 @@ $$
 FP \le \sum_{k=0}^{mvr - 1}\sum_{l = 0}^{k}{P(Bi(k, err) = l) \cdot P(Bi(cov - k, err^\star) = vr - k + l)} \stackrel{def}{=} fp
 $$
 
-$tp \stackrel{def}{=} 1 - fp$\
-$FP \le fp \implies -FP \ge -fp \implies 1 - FP \ge 1 - fp \implies TP \ge tp$
+Получили желаемое: верхнюю оценку на $FP$.
 
-Получили желаемое: верхнюю оценку на $FP$ и нижнюю оценку на $TP$.
+## Оценка снизу на $TP$
+
+<b><u>Пока непонятно, как оценить TP!</u></b>
+
+Мысли на эту тему:
+
+В общем случае, утверждение $FP + TP \ge 1$ неверно. \
+Пример: $cov = 1, mvr = 1, vr^\star = 1$. \
+Тогда
+
+1. $FP = P(\star \mid VR = 0) = P(Bi(1, err^\star) = 1) = err^\star$
+2. $TP = P(\star \mid VR = 1) = P(Bi(1, err) = 0) = 1 - err$
+3. $FP + TP = 1 - \frac{2}{3} err < 1$
+
+Если же $FP + TP \ge 1$, то
+
+$tp \stackrel{def}{=} 1 - fp$\
+$FP \le fp \implies -FP \ge -fp \implies 1 - FP \ge 1 - fp \implies 
+TP \ge tp$
+
+Верно: \
+$P(\star \mid VR \in [0, cov]) = P(\star) = 
+\sum_{k=0}^{cov}{P(VR = k) P(\star \mid VR = k)} \le
+FP + TP$ \
+$P(\star) \ge \min_k P(\star \mid VR = k)$, но эта оценка не имеет практической ценности. \
+Даже если мы примем, что $VR$ равновероятна, т.е. $P(VR = k) = \frac{1}{cov + 1}$, оценка на $TP$ будет слишком мала.
+
+На практике $fp$ довольно мала, $\sum_{k=mvr}^{cov}{P(\star \mid VR = k)} \ge 1 - fp$, т.е. близка к 1.

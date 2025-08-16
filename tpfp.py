@@ -41,9 +41,9 @@ def getTPFP(cov: int, vr: int, err: float, mvr: int = 1):
 
     fp = fpProb(cov, vr, err, mvr)
     fp = min(fp, 1)
-    tp = 1 - fp
+    # tp = 1 - fp
 
     return {
         Keys.FP: fp,
-        Keys.TP: tp,
+        # Keys.TP: tp,
     }
